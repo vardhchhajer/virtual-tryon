@@ -16,6 +16,9 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Ensure public directory exists (Next.js standalone expects it)
+RUN mkdir -p public
+
 # Build Next.js app in standalone mode
 RUN npm run build
 
