@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'AI Virtual Try-On | Fabric Design Studio',
+  title: 'AI Virtual Try On | Fabric Design Studio',
   description: 'Interactive virtual try-on for traditional South Asian garments with AI-powered fabric replacement, PDF catalog support, and custom design controls.',
 };
 
