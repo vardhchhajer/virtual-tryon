@@ -29,9 +29,12 @@ async function fileToInlineData(file: File) {
 export async function POST(request: Request) {
   try {
     const apiKey = process.env.GOOGLE_API_KEY;
+    console.log('[API/generate] Request received. API key present:', !!apiKey, 'Key prefix:', apiKey?.substring(0, 8) + '...');
+
     if (!apiKey) {
+      console.error('[API/generate] GOOGLE_API_KEY not found in environment variables');
       return NextResponse.json(
-        { error: 'GOOGLE_API_KEY not configured. Set it in .env.local (from Google Cloud Console)' },
+        { error: 'GOOGLE_API_KEY not configured. Set it as an environment variable in Cloud Run.' },
         { status: 500 }
       );
     }
@@ -39,6 +42,8 @@ export async function POST(request: Request) {
     const formData = await request.formData();
     const prompt = formData.get('prompt') as string;
     const modelImage = formData.get('modelImage') as File | null;
+
+    console.log('[API/generate] Prompt length:', prompt?.length, 'Model image:', modelImage?.name, 'Size:', modelImage?.size);
 
     if (!prompt) {
       return NextResponse.json(
@@ -82,6 +87,8 @@ export async function POST(request: Request) {
     // ─── Call Nano Banana Pro (Gemini 3 Pro Image Preview) ───
     const ai = new GoogleGenAI({ apiKey });
 
+    console.log('[API/generate] Calling Gemini model with', contents.length, 'content parts...');
+
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-image-preview',
       contents,
@@ -95,6 +102,8 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    console.log('[API/generate] Gemini response received. Candidates:', response.candidates?.length, 'Usage:', JSON.stringify(response.usageMetadata));
 
     // ─── Extract generated image from response ───
     let imageUrl: string | null = null;

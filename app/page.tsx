@@ -92,16 +92,19 @@ export default function HomePage() {
       }
 
       // Call the API
+      console.log('[Generate] Sending request to /api/generate...');
       const res = await fetch('/api/generate', {
         method: 'POST',
         body: formData,
       });
 
-      if (!res.ok) {
-        throw new Error('Generation failed. Please try again.');
-      }
-
       const data = await res.json();
+      console.log('[Generate] Response status:', res.status, 'data:', data);
+
+      if (!res.ok) {
+        const errorMsg = data?.error || `Generation failed (HTTP ${res.status}). Please try again.`;
+        throw new Error(errorMsg);
+      }
 
       // Add design number overlay if needed
       let imageWithNumberUrl = data.imageUrl;
@@ -129,10 +132,10 @@ export default function HomePage() {
         imageWithNumberUrl,
         designNumber: dnConfig.enabled
           ? formatDesignNumber(
-              dnConfig.number || generateAutoDesignNumber(state.autoDesignCounter),
-              dnConfig.format,
-              dnConfig.customFormat
-            )
+            dnConfig.number || generateAutoDesignNumber(state.autoDesignCounter),
+            dnConfig.format,
+            dnConfig.customFormat
+          )
           : undefined,
         timestamp: Date.now(),
         qualityFlags: data.qualityFlags || [],
