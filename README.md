@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # 👗 AI Virtual Try-On — Fabric Design Studio
 
@@ -302,4 +302,3 @@ This project is private and proprietary.
 <div align="center">
   <sub>Built with ❤️ using Next.js, Google Gemini, and TypeScript</sub>
 </div>
-]]>
